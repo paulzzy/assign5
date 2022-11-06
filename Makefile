@@ -47,7 +47,10 @@ randall-submission.$(TAREXT): $(submission-files)
 repository-tarball:
 	$(TAR) -czf randall-git.tgz .git
 
-.PHONY: default clean assignment submission-tarball repository-tarball
+.PHONY: default clean assignment submission-tarball repository-tarball check
 
 clean:
 	rm -f *.o *.$(TAREXT) randall
+
+check:
+	cd test && ./count_bytes.sh

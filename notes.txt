@@ -1,0 +1,6 @@
+- Commit notes.txt
+
+- Create test directory and rudimentary script to validate that `randall`
+  outputs the correct number of bytes.
+
+- Call test from Makefile
