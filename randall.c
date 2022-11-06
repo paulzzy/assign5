@@ -22,6 +22,7 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 #include <errno.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -35,7 +36,7 @@ int main(int argc, char** argv) {
   /* Check arguments.  */
   bool valid = false;
   long long nbytes;
-  if (argc == 2) {
+  if (argc >= 2) {
     char* endptr;
     errno = 0;
     nbytes = strtoll(argv[1], &endptr, 10);
@@ -45,7 +46,13 @@ int main(int argc, char** argv) {
       valid = !*endptr && 0 <= nbytes;
   }
   if (!valid) {
-    fprintf(stderr, "%s: usage: %s NBYTES\n", argv[0], argv[0]);
+    fprintf(stderr, "%s: usage: %s NBYTES [-i input] [-o output]\n", argv[0],
+            argv[0]);
+    return 1;
+  }
+
+  struct options options = parse_options(argc, argv);
+  if (!options.valid) {
     return 1;
   }
 

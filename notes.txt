@@ -23,3 +23,7 @@ within the same file were kept `static`.
 ADDING OPTIONS
 
 - Modify Makefile to enable AddressSanitizer and Undefined Behavior Sanitizer
+
+- Use the `getopt` function (see docs at
+https://www.gnu.org/software/libc/manual/html_node/Using-Getopt.html) to
+implement option parsing.

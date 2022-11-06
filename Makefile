@@ -19,7 +19,7 @@
 OPTIMIZE =
 
 # Enable AddressSanitizer and Undefined Behavior Sanitizer
-SANITIZE = -fsanitize=address -fsanitize=undefined
+SANITIZE = -fsanitize=address -fsanitize=undefined -Wl,--rpath=/usr/local/cs/lib64
 
 # The C compiler and its options.
 CC = gcc
@@ -33,7 +33,7 @@ TAREXT = tgz
 
 default: randall
 
-randall: randall.c
+randall: *.c
 	$(CC) $(CFLAGS) *.c -o $@
 
 assignment: randall-assignment.$(TAREXT)
