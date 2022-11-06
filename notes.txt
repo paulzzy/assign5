@@ -27,3 +27,15 @@ ADDING OPTIONS
 - Use the `getopt` function (see docs at
 https://www.gnu.org/software/libc/manual/html_node/Using-Getopt.html) to
 implement option parsing.
+
+- I use a switch-case statement to modify the program's behavior based on the
+user-supplied options.
+
+- Implementing a wrapper around `mrand48_r` requires seeding in the
+`mrand48_r_wrapper_init` function. Also, `mrand48_r` only returns 32-bit values,
+so a bit of work was required to return 64-bit random values.
+
+- To allow an arbitrary filename to be the random source, I had to add an extra
+function `software_rand64_set_file` to set the filename since `initialize`
+doesn't take arguments. Modifying `initialize` would change how every other `-i`
+argument works, since I opted to just add an extra function.

@@ -20,7 +20,7 @@ void hardware_rand64_init(void) {}
 
 /* Return a random value, using hardware operations.  */
 unsigned long long hardware_rand64(void) {
-  unsigned long long int x;
+  unsigned long long int x = 0;
   while (!_rdrand64_step(&x)) continue;
   return x;
 }

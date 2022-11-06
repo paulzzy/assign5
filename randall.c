@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "mrand48_r_wrapper.h"
 #include "options.h"
 #include "output.h"
 #include "rand64-hw.h"
@@ -56,23 +57,44 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  /* If there's no work to do, don't worry about which library to use.  */
-  if (nbytes == 0) return 0;
-
   /* Now that we know we have work to do, arrange to use the
      appropriate library.  */
   void (*initialize)(void);
   unsigned long long (*rand64)(void);
   void (*finalize)(void);
-  if (rdrand_supported()) {
-    initialize = hardware_rand64_init;
-    rand64 = hardware_rand64;
-    finalize = hardware_rand64_fini;
+
+  // Implement -i option
+  if (options.input == NULL || strcmp(options.input, "rdrand") == 0) {
+    if (rdrand_supported()) {
+      initialize = hardware_rand64_init;
+      rand64 = hardware_rand64;
+      finalize = hardware_rand64_fini;
+    } else {
+      fprintf(stderr,
+              "%s: `rdrand` not supported. Please select another random source "
+              "using `-i`.\n",
+              argv[0]);
+      return 1;
+    }
+  } else if (strcmp(options.input, "mrand48_r") == 0) {
+    initialize = mrand48_r_wrapper_init;
+    rand64 = mrand48_r_wrapper;
+    finalize = mrand48_r_wrapper_fini;
   } else {
-    initialize = software_rand64_init;
-    rand64 = software_rand64;
-    finalize = software_rand64_fini;
+    if (options.input[0] == '/') {
+      software_rand64_set_file(options.input);
+      initialize = software_rand64_init;
+      rand64 = software_rand64;
+      finalize = software_rand64_fini;
+    } else {
+      fprintf(stderr, "%s: Unrecognized `-i` argument: %s\n", argv[0],
+              options.input);
+      return 1;
+    }
   }
+
+    /* If there's no work to do, don't worry about which library to use.  */
+  if (nbytes == 0) return 0;
 
   initialize();
   int wordsize = sizeof rand64();
