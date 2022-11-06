@@ -31,7 +31,7 @@ TAREXT = tgz
 default: randall
 
 randall: randall.c
-	$(CC) $(CFLAGS) $@.c -o $@
+	$(CC) $(CFLAGS) *.c -o $@
 
 assignment: randall-assignment.$(TAREXT)
 assignment-files = COPYING Makefile randall.c

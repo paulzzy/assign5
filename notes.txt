@@ -1,6 +1,21 @@
+START
+
 - Commit notes.txt
 
+BASIC TESTING
+
 - Create test directory and rudimentary script to validate that `randall`
-  outputs the correct number of bytes.
+outputs the correct number of bytes.
 
 - Call test from Makefile
+
+CODE SPLITTING
+
+- I copy-pasted chunks of the code in randall.c into their appropriate files
+(following the spec).
+
+- Also, I put #include directives in the appropriate places.
+
+- Besides #include, the only modifications I made were to remove `static` from
+the functions that are used by other C files. Functions that were only used
+within the same file were kept `static`.
