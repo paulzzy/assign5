@@ -18,9 +18,12 @@
 # Optimization level.  Change this -O2 to -Og or -O0 or whatever.
 OPTIMIZE =
 
+# Enable AddressSanitizer and Undefined Behavior Sanitizer
+SANITIZE = -fsanitize=address -fsanitize=undefined
+
 # The C compiler and its options.
 CC = gcc
-CFLAGS = $(OPTIMIZE) -g3 -Wall -Wextra -fanalyzer \
+CFLAGS = $(OPTIMIZE) $(SANITIZE) -g3 -Wall -Wextra -fanalyzer \
   -march=native -mtune=native -mrdrnd
 
 # The archiver command, its options and filename extension.

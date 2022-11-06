@@ -19,3 +19,7 @@ CODE SPLITTING
 - Besides #include, the only modifications I made were to remove `static` from
 the functions that are used by other C files. Functions that were only used
 within the same file were kept `static`.
+
+ADDING OPTIONS
+
+- Modify Makefile to enable AddressSanitizer and Undefined Behavior Sanitizer
