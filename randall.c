@@ -22,6 +22,7 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 #include <errno.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -93,22 +94,47 @@ int main(int argc, char** argv) {
     }
   }
 
-    /* If there's no work to do, don't worry about which library to use.  */
+  // Implement -o option
+  const int base = 10;
+  const char string_terminator = '\0';
+
+  int chunk_size = 0;
+  char* end = NULL;
+
+  if (options.output == NULL || strcmp(options.output, "stdio") == 0) {
+    chunk_size = -1;
+  } else {
+    int parsed_num = strtoull(options.output, &end, base);
+
+    if (parsed_num > 0 && *end == string_terminator) {
+      chunk_size = parsed_num;
+    } else {
+      fprintf(stderr, "%s: Unrecognized `-o` argument: %s\n", argv[0],
+              options.output);
+      return 1;
+    }
+  }
+
+  /* If there's no work to do, don't worry about which library to use.  */
   if (nbytes == 0) return 0;
 
   initialize();
   int wordsize = sizeof rand64();
   int output_errno = 0;
 
-  do {
-    unsigned long long x = rand64();
-    int outbytes = nbytes < wordsize ? nbytes : wordsize;
-    if (!writebytes(x, outbytes)) {
-      output_errno = errno;
-      break;
-    }
-    nbytes -= outbytes;
-  } while (0 < nbytes);
+  if (chunk_size == -1) {
+    do {
+      unsigned long long x = rand64();
+      int outbytes = nbytes < wordsize ? nbytes : wordsize;
+      if (!writebytes(x, outbytes)) {
+        output_errno = errno;
+        break;
+      }
+      nbytes -= outbytes;
+    } while (0 < nbytes);
+  } else {
+    chunked_write(rand64, nbytes, chunk_size);
+  }
 
   if (fclose(stdout) != 0) output_errno = errno;
 

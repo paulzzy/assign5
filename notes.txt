@@ -22,6 +22,8 @@ within the same file were kept `static`.
 
 ADDING OPTIONS
 
+-i OPTION
+
 - Modify Makefile to enable AddressSanitizer and Undefined Behavior Sanitizer
 
 - Use the `getopt` function (see docs at
@@ -39,3 +41,12 @@ so a bit of work was required to return 64-bit random values.
 function `software_rand64_set_file` to set the filename since `initialize`
 doesn't take arguments. Modifying `initialize` would change how every other `-i`
 argument works, since I opted to just add an extra function.
+
+-o OPTION
+
+- I added `chunked_write`, a function that writes random data in chunks. It
+accepts `rand64` as a function pointer. Chunks are written in a loop until
+`nbytes` bytes (passed as an argument) are written. The actual writing is
+delegated to `chunked_write`, which `malloc`s a buffer with capacity
+`chunk_size` (passed as an argument). The buffer is filled with random data,
+then written at once using `write`.
