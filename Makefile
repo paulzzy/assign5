@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 # Optimization level.  Change this -O2 to -Og or -O0 or whatever.
-OPTIMIZE =
+OPTIMIZE = -O3
 
 # Enable AddressSanitizer and Undefined Behavior Sanitizer
 SANITIZE = -fsanitize=address -fsanitize=undefined -Wl,--rpath=/usr/local/cs/lib64
