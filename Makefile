@@ -43,7 +43,7 @@ randall-assignment.$(TAREXT): $(assignment-files)
 
 submission-tarball: randall-submission.$(TAREXT)
 submission-files = $(assignment-files) \
-  notes.txt *.c *.h # More files should be listed here, as needed.
+  notes.txt *.c *.h test.sh # More files should be listed here, as needed.
 randall-submission.$(TAREXT): $(submission-files)
 	$(TAR) $(TARFLAGS) -cf $@ $(submission-files)
 
@@ -56,4 +56,4 @@ clean:
 	rm -f *.o *.$(TAREXT) randall
 
 check:
-	cd test && ./count_bytes.sh
+	./test.sh

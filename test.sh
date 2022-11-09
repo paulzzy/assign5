@@ -16,17 +16,16 @@ Tests whether \`randall\` outputs the input number of bytes.
     exit
 fi
 
-# Change to source files directory
-cd "../$(dirname "$0")"
+cd "$(dirname "$0")"
 
 main() {
     make
 
-    declare -r BOUND="1000"
+    declare -r NUM_TESTS="100"
 
-    echo "Running $BOUND tests..."
+    echo "Running $NUM_TESTS tests..."
 
-    for ((i = 0; i < BOUND; i++)) do
+    for ((i = 0; i < NUM_TESTS; i++)) do
         output_bytes=$(./randall "$i" | wc -c)
 
         if [[ "$output_bytes" != "$i" ]]; then
@@ -35,7 +34,7 @@ main() {
         fi
     done
 
-    echo "PASSED: All $BOUND test cases passed."
+    echo "PASSED: All $NUM_TESTS test cases passed."
     make clean
 }
 
