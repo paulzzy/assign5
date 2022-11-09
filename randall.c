@@ -36,25 +36,29 @@
 /* Main program, which outputs N bytes of random data.  */
 int main(int argc, char** argv) {
   /* Check arguments.  */
-  bool valid = false;
-  long long nbytes;
-  if (argc >= 2) {
-    char* endptr;
-    errno = 0;
-    nbytes = strtoll(argv[1], &endptr, 10);
-    if (errno)
-      perror(argv[1]);
-    else
-      valid = !*endptr && 0 <= nbytes;
-  }
-  if (!valid) {
-    fprintf(stderr, "%s: usage: %s NBYTES [-i input] [-o output]\n", argv[0],
-            argv[0]);
+  struct options options = parse_options(argc, argv);
+
+  if (!options.valid) {
     return 1;
   }
 
-  struct options options = parse_options(argc, argv);
-  if (!options.valid) {
+  bool valid = false;
+  long long nbytes;
+
+  if (argc >= 2) {
+    char* endptr;
+    errno = 0;
+    nbytes = strtoll(argv[argc - 1], &endptr, 10);
+    if (errno) {
+      perror(argv[1]);
+    } else {
+      valid = !*endptr && 0 <= nbytes;
+    }
+  }
+
+  if (!valid) {
+    fprintf(stderr, "%s: usage: %s [-i input] [-o output] NBYTES\n", argv[0],
+            argv[0]);
     return 1;
   }
 
