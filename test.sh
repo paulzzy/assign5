@@ -12,6 +12,8 @@ if [[ "${1-}" =~ ^-*h(elp)?$ ]]; then
 
 Tests whether \`randall\` outputs the input number of bytes.
 
+Assumes that randall was built first (i.e. \`make\` was run).
+
 "
     exit
 fi
@@ -19,8 +21,6 @@ fi
 cd "$(dirname "$0")"
 
 main() {
-    make
-
     declare -r NUM_TESTS="100"
 
     echo "Running $NUM_TESTS tests..."
@@ -35,7 +35,6 @@ main() {
     done
 
     echo "PASSED: All $NUM_TESTS test cases passed."
-    make clean
 }
 
 main "$@"
