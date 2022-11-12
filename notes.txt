@@ -50,3 +50,21 @@ accepts `rand64` as a function pointer. Chunks are written in a loop until
 delegated to `chunked_write`, which `malloc`s a buffer with capacity
 `chunk_size` (passed as an argument). The buffer is filled with random data,
 then written at once using `write`.
+
+TIMING RESULTS
+
+[classpzh@lnxsrv12 assign5]$ time ./randall 133562368 >/dev/null
+
+real    0m3.367s
+user    0m3.328s
+sys     0m0.025s
+[classpzh@lnxsrv12 assign5]$ time ./randall 133562368 | cat >/dev/null
+
+real    0m3.684s
+user    0m3.360s
+sys     0m0.229s
+[classpzh@lnxsrv12 assign5]$ time ./randall 133562368 >rand.data
+
+real    0m3.446s
+user    0m3.322s
+sys     0m0.106s
