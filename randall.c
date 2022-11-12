@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
   if (argc >= 2) {
     char* endptr;
     errno = 0;
-    nbytes = strtoll(argv[argc - 1], &endptr, 10);
+    nbytes = strtoll(argv[optind], &endptr, 10);
     if (errno) {
       perror(argv[1]);
     } else {
