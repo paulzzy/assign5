@@ -1,30 +1,37 @@
 #include "output.h"
 
-static int write_random_chunk(unsigned long long (*rand64)(void), int chunk_size) {
+static int write_random_chunk(unsigned long long (*rand64)(void),
+                              int chunk_size) {
   unsigned char *output_buf = malloc(chunk_size);
 
   if (!output_buf) {
     return -1;
   }
 
-  const int num_4_byte_chunks = chunk_size / 4;
+  const int num_8_byte_chunks = chunk_size / 8;
   const int stdout_fd = 1;
 
-  // Fill buffer up to a multiple of 4, since `rand64` returns 4 bytes rather
+  // Fill buffer up to a multiple of 8, since `rand64` returns 8 bytes rather
   // than 1 byte
-  for (int i = 0; i < num_4_byte_chunks; i++) {
-    unsigned long long rand_4_bytes = rand64();
+  for (int i = 0; i < num_8_byte_chunks; i++) {
+    unsigned long long rand_8_bytes = rand64();
 
-    output_buf[i] = (unsigned char)rand_4_bytes;
-    output_buf[i + 1] = (unsigned char)rand_4_bytes >> 8;
-    output_buf[i + 2] = (unsigned char)rand_4_bytes >> 16;
-    output_buf[i + 3] = (unsigned char)rand_4_bytes >> 24;
+    output_buf[i] = (unsigned char)(rand_8_bytes);
+    output_buf[i + 1] = (unsigned char)(rand_8_bytes >> 8);
+    output_buf[i + 2] = (unsigned char)(rand_8_bytes >> 16);
+    output_buf[i + 3] = (unsigned char)(rand_8_bytes >> 24);
+    output_buf[i + 4] = (unsigned char)(rand_8_bytes >> 32);
+    output_buf[i + 5] = (unsigned char)(rand_8_bytes >> 40);
+    output_buf[i + 6] = (unsigned char)(rand_8_bytes >> 48);
+    output_buf[i + 7] = (unsigned char)(rand_8_bytes >> 56);
   }
 
   // Fill remainder of buffer
-  unsigned long long rand_4_bytes = rand64();
-  for (int i = 0; i < chunk_size % 4; i++) {
-    output_buf[i] = (unsigned char)rand_4_bytes >> i * 8;
+  if (chunk_size % 8 > 0) {
+    unsigned long long rand_8_bytes = rand64();
+    for (int i = num_8_byte_chunks * 8; i < chunk_size % 8; i++) {
+      output_buf[i] = (unsigned char)(rand_8_bytes >> (i * 8));
+    }
   }
 
   int bytes_written = write(stdout_fd, output_buf, chunk_size);
